@@ -33,6 +33,7 @@ class Game {
     players = [player1, player2];
 
     obstacles = new Group();
+    bulletsGroup = new Group();
 
     var obstaclesPositions = [
       { x: width / 2 + 250, y: height - 800, image: robotImg },
@@ -56,6 +57,8 @@ class Game {
       0.4,
       obstaclesPositions
     );
+
+    obstacles.setVelocityYEach(4);
   }
   addSprites(spriteGroup, numberOfSprites, spriteImage, scale, positions = []) {
     for (var i = 0; i < numberOfSprites; i++) {
@@ -71,8 +74,12 @@ class Game {
         y = random(-height * 4.5, height - 400);
       }
       var sprite = createSprite(x, y);
+      if(spriteImage!=null){
       sprite.addImage("sprite", spriteImage);
-
+      }
+      else{
+        sprite.shapeColor="orange";
+      }
       sprite.scale = scale;
       spriteGroup.add(sprite);
     }
@@ -118,7 +125,7 @@ class Game {
           camera.position.y = players[index - 1].position.y;
         }
       }
-      //this.addRobots();
+      
       this.handlePlayerControls();
       drawSprites();
     }
@@ -178,10 +185,10 @@ class Game {
   }
 
   handlePlayerControls() {
-    if (keyIsDown(UP_ARROW)) {
-      player.positionY += 10;
-      player.update();
-    }
+    // if (keyIsDown(UP_ARROW)) {
+    //   player.positionY += 10;
+    //   player.update();
+    // }
 
     if (keyIsDown(LEFT_ARROW) && player.positionX > width / 3 - 50) {
       player.positionX -= 5;
@@ -192,11 +199,18 @@ class Game {
       player.positionX += 5;
       player.update();
     }
-  }
-  addRobots() {
-    if (this.index == 1) {
-      var enemyRobot = createSprite(random(1, 200), random(10, 100));
-      enemyRobot.addImage("robot", robotImg);
+
+    if (keyIsDown(32)) {
+      if(player.index == 1){
+      var bullet = createSprite(players[0].position.x,players[0].position.y,100,100);
+      }
+      else if(player.index == 2){
+      var bullet = createSprite(players[1].position.x,players[1].position.y,100,100);
+      }
+      bullet.shapeColor = "red";
+      bullet.velocityY = -5;
+      bulletsGroup.add(bullet);
     }
   }
+  
 }
